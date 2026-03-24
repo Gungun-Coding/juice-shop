@@ -10,17 +10,16 @@ pipeline {
         }
 
         stage('SonarQube Scan') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh '''
-                    sonar-scanner \
-                    -Dsonar.projectKey=juice-shop \
-                    -Dsonar.sources=. \
-                    -Dsonar.login=$sonar_token
-                    '''
-                }
-            }
+    steps {
+        withSonarQubeEnv('SonarQube') {
+            sh '''
+            sonar-scanner \
+            -Dsonar.projectKey=juice-shop \
+            -Dsonar.sources=.
+            '''
         }
+    }
+}
 
         stage('Build Docker Image') {
             steps {
