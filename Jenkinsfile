@@ -15,9 +15,19 @@ pipeline {
                 echo 'Docker image built successfully.'
             }
         }
-        stage('Container Scan'){
+
+        stage('Container Scan') {
             steps {
-                sh 'trivy image juice-shop-app'
+                sh '''
+                trivy image --format table -o trivy-report.txt juice-shop-app
+                '''
+                archiveArtifacts artifacts: 'trivy-report.txt'
+            }
+        }
+
+        stage('Security Gate') {
+            steps {
+                sh 'trivy image --exit-code 1 --severity CRITICAL juice-shop-app'
             }
         }
 
