@@ -17,7 +17,7 @@ pipeline {
   -Dsonar.login=sqp_636136e21f606c7547b17a21d188caaa9bd69ee8'
         }
     }
-}
+
 
         stage('Build Docker Image') {
             steps {
