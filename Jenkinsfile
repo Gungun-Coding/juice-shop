@@ -11,12 +11,17 @@ pipeline {
 
         stage('SonarQube Scan') {
     steps {
-        sh 'mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=Juice-shop1 \
-  -Dsonar.host.url=http://ec2-16-171-27-169.eu-north-1.compute.amazonaws.com:9000 \
-  -Dsonar.login=sqp_636136e21f606c7547b17a21d188caaa9bd69ee8'
+        withSonarQubeEnv('sonarqube') {
+            sh '''
+            sonar-scanner \
+              -Dsonar.projectKey=Juice-shop1 \
+              -Dsonar.sources=. \
+              -Dsonar.host.url=http://ec2-16-171-27-169.eu-north-1.compute.amazonaws.com:9000 \
+              -Dsonar.login='sqp_636136e21f606c7547b17a21d188caaa9bd69ee8'
+            '''
         }
     }
+}
 
 
         stage('Build Docker Image') {
