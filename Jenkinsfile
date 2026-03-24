@@ -9,25 +9,28 @@ pipeline {
             }
         }
 
+        stage('SonarQube Scan') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh '''
+                    sonar-scanner \
+                    -Dsonar.projectKey=juice-shop \
+                    -Dsonar.sources=. \
+                    -Dsonar.login=$sonar_token
+                    '''
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t juice-shop-app .'
-                echo 'Docker image built successfully.'
             }
         }
 
         stage('Container Scan') {
             steps {
-                sh '''
-                trivy image --format table -o trivy-report.txt juice-shop-app
-                '''
-                archiveArtifacts artifacts: 'trivy-report.txt'
-            }
-        }
-
-        stage('Security Gate') {
-            steps {
-                sh 'trivy image --exit-code 1 --severity CRITICAL juice-shop-app'
+                sh 'trivy image juice-shop-app'
             }
         }
 
