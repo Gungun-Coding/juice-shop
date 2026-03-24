@@ -15,6 +15,11 @@ pipeline {
                 echo 'Docker image built successfully.'
             }
         }
+        stage('Container Scan'){
+            steps {
+                sh 'trivy image juice-shop-app'
+            }
+        }
 
     }
 }
